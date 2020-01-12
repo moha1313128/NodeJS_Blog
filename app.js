@@ -1,41 +1,28 @@
 // Full Documentation - https://docs.turbo360.co
 const vertex = require('vertex360')({site_id: process.env.TURBO_APP_ID})
-
-const app = vertex.express() // initialize app
-
-
-/*  
-	Apps can also be initialized with config options as shown in the commented out example below. Options
-	include setting views directory, static assets directory, and database settings. To see default config
-	settings, view here: https://docs.turbo360.co
+const turbo = require('turbo360')({site_id: process.env.TURBO_APP_ID})
+const path = require('path')
+const controllers = require('./controllers')
 
 const config = {
-	views: 'views', 		// Set views directory 
-	static: 'public', 		// Set static assets directory
-	db: { 					// Database configuration. Remember to set env variables in .env file: MONGODB_URI, PROD_MONGODB_URI
-		url: (process.env.TURBO_ENV == 'dev') ? process.env.MONGODB_URI : process.env.PROD_MONGODB_URI,
-		type: 'mongo',
-		onError: (err) => {
-			console.log('DB Connection Failed!')
-		},
-		onSuccess: () => {
-			console.log('DB Successfully Connected!')
-		}
-	}
+	views: 'views', 	// Set views directory
+	static: 'public',   // Set static assets directory
+	logging: true,
+	controllers: controllers,
+	db: vertex.nedbConfig((process.env.TURBO_ENV=='dev') ? 'nedb://'+path.join(__dirname, process.env.TMP_DIR) : 'nedb://'+process.env.TMP_DIR)
 }
 
 const app = vertex.app(config) // initialize app with config options
 
-*/
+// order matters here:
+app.use(vertex.fetchGlobal(process.env.TURBO_API_KEY, process.env.TURBO_ENV, turbo)) // fetch global config on every route
+app.use(vertex.setContext(process.env))
 
-
-// import routes
-const index = require('./routes/index')
-const api = require('./routes/api')
+// import route files
+const sample = require('./routes/sample') // sample routes for pages and REST API
 
 // set routes
-app.use('/', index)
-app.use('/api', api) // sample API Routes
-
+app.use('/', sample.page)
+app.use('/api', sample.api)
 
 module.exports = app
