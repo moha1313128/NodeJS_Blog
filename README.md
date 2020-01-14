@@ -1,2 +1,2 @@
-# NodeJS_Turbo_Blog
+# NodeJS
 Blog with node js &amp; turbo
