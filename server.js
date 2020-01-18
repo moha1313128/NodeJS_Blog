@@ -6,17 +6,10 @@ const db = config.get('mongoURI');
 const app = express();
 
 // Connect Database
-// connectDB;
-try {
-    mongoose.connect(db, { useNewUrlParser: true, useUnifiedTopology: true });
-    console.log('Mongodb connected....');
-} catch (err) {
-    // console.log('Not connected');
-    console.error(err.message);
-    // Exit process with failure
-    process.exit(1);
-}
+connectDB();
 
+// Initial Middleware
+app.use(express.json({ extended:false }));
 
 app.get('/', (req, res) => res.send('API Running'));
 // Define Routes
