@@ -1,28 +1,29 @@
 <mat-card>
-  <form (submit)="onAddPost(postForm)" #postForm="ngForm">
+  <mat-spinner *ngIf="isLoading"></mat-spinner>
+  <form (submit)="onAddPost(postForm)" #postForm="ngForm" *ngIf="!isLoading">
     <mat-form-field>
       <input
         type="text"
         matInput
         name="title"
-        ngModel
+        [ngModel]="post?.title"
         required
         placeholder="Enter your title"
         minlength="5"
         #title="ngModel">
-      <mat-error *ngIf="">Please enter a post title</mat-error>
+      <mat-error *ngIf="title.invalid">Please enter a post title</mat-error>
     </mat-form-field>
     <mat-form-field>
       <textarea
         matInput
         rows="10"
         name="content"
-        ngModel
+        [ngModel]="post?.content"
         required
         placeholder="Enter your content"
         minlength="50"
         #content="ngModel"></textarea>
-        <mat-error *ngIf="">Please enter a content</mat-error>
+        <mat-error *ngIf="content.invalid">Please enter a content</mat-error>
     </mat-form-field>
     <button
       mat-raised-button
